@@ -1,0 +1,127 @@
+{
+  "items": [
+    {
+      "id": "example0",
+      "bgcolor": "#F00",
+      "text": "0",
+      "items": [
+        {
+          "id": "example1",
+          "bgcolor": "lightblue",
+          "text": "1",
+          "run": "path\\to\\example1.exe",
+          "items": [
+            {
+              "id": "exampleB",
+              "bgcolor": "#00F585",
+              "text": "B",
+              "link": "http://127.0.0.1:3000/api/exampleB"
+            }
+          ]
+        },
+        {
+          "id": "example2",
+          "bgcolor": "#F00",
+          "text": "2",
+          "run": "path\\to\\example2.bat"
+        },
+        {
+          "id": "example3",
+          "bgcolor": "lightblue",
+          "text": "3",
+          "run": "path\\to\\example3.bat",
+          "items": [
+            {
+              "id": "exampleA",
+              "bgcolor": "#00F585",
+              "text": "A",
+              "link": "http://127.0.0.1:3000/api/exampleA"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example4",
+      "bgcolor": "lightblue",
+      "text": "4",
+      "items": [
+        {
+          "id": "example5",
+          "text": "5",
+          "bgcolor": "#F00",
+          "items": [
+            {
+              "id": "example6",
+              "text": "6",
+              "bgcolor": "lightblue",
+              "link": "http://127.0.0.1:3000/api/example6",
+              "items": [
+                {
+                  "id": "example7",
+                  "text": "7",
+                  "bgcolor": "#F00",
+                  "link": "http://127.0.0.1:3000/api/example7",
+                  "items": []
+                }
+              ]
+            },
+            {
+              "id": "example8",
+              "text": "8",
+              "bgcolor": "lightblue",
+              "link": "http://127.0.0.1:3000/api/example8",
+              "items": [
+                {
+                  "id": "example9",
+                  "text": "9",
+                  "bgcolor": "#F00",
+                  "link": "http://127.0.0.1:3000/api/example9",
+                  "items": []
+                }
+              ]
+            }
+
+          ]
+        },
+        {
+          "id": "example10",
+          "text": "10",
+          "bgcolor": "#00F585",
+          "items": []
+        },
+        {
+          "id": "example11",
+          "text": "11",
+          "bgcolor": "#00F585",
+          "items": [
+            
+            
+          ]
+        },
+        {
+          "id": "example14",
+          "text": "14",
+          "bgcolor": "#F00",
+          "items": [
+            {
+              "id": "example12",
+              "text": "12",
+              "bgcolor": "lightblue",
+              "link": "http://127.0.0.1:3000/api/example12",
+              "items": [
+                {
+                  "id": "example13",
+                  "text": "13",
+                  "bgcolor": "#FF0000",
+                  "link": "http://127.0.0.1:3000/api/example13",
+                  "items": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

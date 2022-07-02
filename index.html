@@ -1,0 +1,122 @@
+<script>
+  const fs = require('fs');
+  const path = require("path");
+  
+  var electron = require('electron');
+  var run = electron.remote.require('./app.js').run;
+  
+  var rawdata = fs.readFileSync(path.resolve(__dirname, 'items.json'));
+  var items = JSON.parse(rawdata);
+</script>
+
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <script type="application/javascript">
+    var depth_width = 50;
+    var center = 200;
+    
+    function drawSection(depth, pos, total, item, ctx) {
+      var angle_start = (pos)/total*2*Math.PI + Math.PI/180;
+      var angle_end = (pos+1)/total*2*Math.PI - Math.PI/180;
+      var rad1 = depth*depth_width;
+      var rad2 = (depth+1)*depth_width - 3;
+      var color = item.bgcolor || '#FFF';
+      var gradient = ctx.createRadialGradient(center,center,rad1, center,center,rad2);
+      gradient.addColorStop(0, color);
+      gradient.addColorStop(.1, color);
+      gradient.addColorStop(.9, color);
+      gradient.addColorStop(.91, '#555');
+      gradient.addColorStop(1, '#555');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(center, center, rad1, angle_start, angle_end, false);
+      ctx.arc(center, center, rad2, angle_end,angle_start , true);
+      ctx.fill();
+      
+      var text = item.text || '';
+      var sec_x = center + (rad1+rad2)/2*Math.cos((angle_start+angle_end)/2);
+      var sec_y = center + (rad1+rad2)/2*Math.sin((angle_start+angle_end)/2);
+      ctx.font = "14px Georgia";
+      ctx.fillStyle = 'black';
+      ctx.fillText(text, sec_x - ctx.measureText(text).width/2, sec_y + 7);
+      
+      ctx.closePath();
+      item.angle_start = angle_start;
+      item.angle_end = angle_end;
+    }
+
+    function findItem(item, item_d, d, phi) {
+      let selected = null;
+      if (!item.items) return selected;
+      for (it of item.items){
+        if (d==item_d && it.angle_start < phi && it.angle_end > phi) {
+          selected = it;
+          break;
+        }
+        else {
+          selected = findItem(it, item_d+1, d, phi)
+          if (selected) break;
+        }
+      }
+      return selected;
+    }
+
+    function onMouseMove(e) {
+      let r = Math.sqrt((e.offsetX-center)*(e.offsetX-center) + (e.offsetY-center)*(e.offsetY-center));
+      r = Math.trunc(r/depth_width);
+      let phi = - Math.atan2(e.offsetY-center, -(e.offsetX-center))+Math.PI;
+      let depth = 0;
+      let it_selected = findItem(items, 0, r, phi);
+      if (it_selected) console.log('Mouseover:', it_selected.id);
+    }
+    
+    function onClick(e) {
+      let r = Math.sqrt((e.offsetX-center)*(e.offsetX-center) + (e.offsetY-center)*(e.offsetY-center));
+      r = Math.trunc(r/depth_width);
+      let phi = - Math.atan2(e.offsetY-center, -(e.offsetX-center))+Math.PI;
+      let depth = 0;
+      let it_selected = findItem(items, 0, r, phi);
+      if (it_selected.link) {
+        httpGet(it_selected.link);
+      }
+      if (it_selected.run) {
+        run(it_selected.run);
+      }
+      if (it_selected) console.log('Selected:', it_selected.id);
+    }
+    
+    function drawSubItems(item, depth, i_prev, total_prev, ctx) {
+      var i = i_prev * item.items.length;
+      var total = total_prev * item.items.length;
+      for (it of item.items){
+        drawSection(depth, i, total, it, ctx);
+        if (it.items) {
+          drawSubItems(it, depth + 1, i, total, ctx);
+        }
+        i++;
+      }
+    }
+
+    function draw() {
+      var canvas = document.getElementById('canvas');
+      canvas.addEventListener("click", onClick, false);
+      if (canvas.getContext) {
+        var ctx = canvas.getContext('2d');
+        drawSubItems(items, 0, 0, 1, ctx);		
+      }
+    }
+    
+    function httpGet(theUrl) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+      xmlHttp.send( null );
+      return xmlHttp.responseText;
+    }
+  </script>
+  </head>
+  <body onload="draw();">
+    <canvas id="canvas" width="400" height="400"></canvas>
+  </body>
+</html>

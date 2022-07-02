@@ -1,0 +1,34 @@
+{
+  "name": "PieMenu",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^11.2.1",
+    "electron-packager": "^15.2.0"
+  },
+  "dependencies": {
+    "iohook": "^0.7.2"
+  },
+  "iohook": {
+    "targets": [
+      "node-72",
+      "electron-85"
+    ],
+    "platforms": [
+      "win32",
+      "darwin"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
+  }
+}
