@@ -63,7 +63,7 @@ const showWindow = () => {
 function getWindowPosition() {
   const windowBounds = win.getBounds();
   const pos = electron.screen.getCursorScreenPoint();
-  return {x: pos.x - windowBounds.width / 2, y: pos.y - windowBounds.height / 2}
+  return {x: Math.round(pos.x - windowBounds.width / 2), y: Math.round(pos.y - windowBounds.height / 2)}
 }
 
 function createTray() {
@@ -76,14 +76,17 @@ function createTray() {
 }
 
 function mouseMoveHandler(event) {
+  if (!win.isVisible()) return;
+
+  const scale = electron.screen.getDisplayNearestPoint(event).scaleFactor;
+  const mouse_x = event.x / scale;
+  const mouse_y = event.y / scale;
+  const bounds = win.getBounds();
   if (
-    win.isVisible() 
-    && (
-      event.x < win.getBounds().x 
-      || event.x > win.getBounds().x + win.getBounds().width 
-      || event.y < win.getBounds().y 
-      || event.y > win.getBounds().y + win.getBounds().height
-    )
+    mouse_x < bounds.x 
+    || mouse_x > bounds.x + bounds.width 
+    || mouse_y < bounds.y 
+    || mouse_y > bounds.y + bounds.height
   ) {
     win.hide();
   }
